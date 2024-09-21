@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Add Symbols</title>
+<link rel="stylesheet" href="/css/index.css">
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" 
+	integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+	crossorigin="anonymous"></script>
+<link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/json2html/1.2.0/json2html.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.json2html/1.2.0/jquery.json2html.min.js"></script>
+</head>
+
+<body>
+
+<div id="container">
+ 	<div id="topPane">
+		<h1>Welcome to Trade Tracker</h1>
+		<button id="showPortfolio">Show Portfolio</button> 
+        <button id="addTrade">Add Trade</button> 
+		
+	</div>
+	
+ 	<div id="leftPane">
+ 		<h1>Here goes the list of your existing symbols</h1>
+		<input type="submit" value="this is leftPane submit button">
+	</div>
+	
+	<div id="centerPane">
+	
+		<h1>Add Symbol - Draggable</h1>
+		<div id="form">
+			<form action="http://localhost:8080/trades" method="get" name="registration" class="register">
+<!--            <form action="doGet" method="post" name="registration" class="register">-->
+
+              <fieldset>
+                <legend>Stock Details</legend>
+        
+                  <p>
+                      Transaction Type: 
+                        <input type="radio" name="txnType" id="txnType1" value="buy"> Buy
+                        <input type="radio" name="txnType" id="txnType2" value="sale"> Sale </p>
+                  <p>
+                      <label for="card">
+                        <span>Choce Index:</span>
+                      </label>
+                      <select id="index" name="index">
+                        <option value="bse">BSE</option>
+                        <option value="nse" selected>NSE</option>
+                      </select> </p>
+                  <p>Stock Name: <input type="text" id="stock" name="stock" /></p>
+                  <p>Test Name: <input type="text" id="test" name="test" /></p>
+                  <p>Investment Date:  <input type="date" id="invDate" name="invDate1"></p>
+                  <p>Investment Price: <input type="number" name="invPrice" value=0.0></p>
+                  <p>Quantity:         <input type="number" name="quantity" value=0></p>
+                  <input type="submit" value="Submit">
+              </fieldset>
+            </form>
+        </div>
+		
+		<table style="width:100%" id="portfolioDetails" hidden>
+		  <tr>
+		    <th>Firstname</th>
+		    <th>Lastname</th> 
+		    <th>Age</th>
+		  </tr>
+		  <tr>
+		    <td>Jill</td>
+		    <td>Smith</td> 
+		    <td>50</td>
+		  </tr>
+		  <tr>
+		    <td>Eve</td>
+		    <td>Jackson</td> 
+		    <td>94</td>
+		  </tr>
+		</table>		
+	</div>
+	
+	<div id="rightPane">	</div>
+	
+	<div id="bottomPane">
+		<a>Here goes all the company info links</a>
+	</div>
+	
+
+</div>
+	
+	<script>
+	//$(document).ready(function(){
+ 	$(function() {	//Shorthand for above line
+		var portolioJson = '[{"Firstname":"Sharad","Lastname":"Sharma","Age":36},{"Firstname":"Richa","Lastname":"Sharma","Age":33}]'; 		
+		var t = {'<>':'div','html':'${Firstname} ${Lastname} ${Age}'};
+ 		
+        //Defaults
+        $("#invDate").val(new Date().toISOString().slice(0, 10));
+        $("#stock").val("TCS1");
+                
+ 		$("#portfolioDetails").css("display","none")
+        
+        $("#addTrade").on("click", function(){
+          $.getJSON("http://localhost:8080/trades", function(data, status){
+            alert("Data via get: " + JSON.stringify(data) + "\nStatus: " + status);
+          });      
+        });
+        
+ 		$("#showPortfolio").on("click", function(){	
+ 			$.getJSON("data.json", function(data) {
+ 				$.each(result, function(i, field){
+					alert(field);
+					alert(JSON.stringfy(data));
+					alert(JSON.parse(data));
+ 				});
+				}); 			
+ 			$("#portfolioDetails").write( json2html.transform(d,t) );
+ 			$("#portfolioDetails").toggle();
+ 			if($("#portfolioDetails").is(":hidden"))
+ 				$(this).text("Show Portfolio");
+ 			else
+ 				$(this).text("Hide Portfolio");
+ 			
+ 		});
+ 		
+        $("button").click(function(){
+            alert("Submit button clicked");
+        });
+ 		
+		$("input").css("5px solid black")
+		$("input").draggable();
+		$("#form").draggable();
+		$("#form").css("5px solid black")
+	});
+        
+        function doGet() {
+            alert("doGet executed");
+        }
+	</script>
+	
+	<style>
+
+	</style>
+
+</body>
+</html>
